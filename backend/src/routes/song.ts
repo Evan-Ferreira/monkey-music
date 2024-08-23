@@ -10,7 +10,6 @@ router.get('/find', async (req, res) => {
         console.log('Failed to retrieve song');
     } else {
         res.status(200).json({ songID: songID });
-        console.log(songID);
     }
 });
 
