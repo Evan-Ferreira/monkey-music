@@ -18,10 +18,12 @@
         "typescript": "^5.5.4"
     },
     "dependencies": {
+        "@googleapis/docs": "^3.3.0",
         "axios": "^1.7.4",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
+        "googleapis": "^142.0.0",
         "ts-node": "^10.9.2"
     }
 }
