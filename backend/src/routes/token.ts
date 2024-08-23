@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { getSpotifyToken } from '../controllers/getToken';
+import { getSpotifyToken, getYouTubeToken } from '../controllers/getToken';
 import { setupMiddlewares } from '../middleware/middleware';
 
 dotenv.config();
@@ -12,6 +12,8 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 
 router.get('/', async (req, res) => {
     const spotifyAccessToken = getSpotifyToken();
+    const authUrl = getYouTubeToken();
+    console.log(authUrl);
     if (!spotifyAccessToken) {
         res.status(500).send('Failed to retrieve access token');
     } else {
@@ -23,5 +25,7 @@ router.get('/', async (req, res) => {
         res.status(200).send('Token stored in HTTP-only cookie');
     }
 });
+
+router.get('/:code', async (req, res) => {});
 
 export default router;
