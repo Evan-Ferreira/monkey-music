@@ -1,10 +1,12 @@
 import express from 'express';
-import { downloadMP3 } from '../controllers/downloadSong';
+import { getPlaylistTracks } from '../controllers/getPlaylistSongs';
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    downloadMP3();
+    getPlaylistTracks(
+        'https://open.spotify.com/playlist/2MoXqUTKKC4E7G18sqMcqX?si=c6828c8b09444695'
+    );
 });
 
 export default router;

@@ -1,10 +1,10 @@
 import express from 'express';
-import findSong from '../controllers/findSong';
+import findSongYT from '../controllers/findSongYT';
 
 const router = express.Router();
 
 router.get('/find', async (req, res) => {
-    const songID = await findSong('shape of you');
+    const songID = await findSongYT('shape of you');
     if (songID === null) {
         res.status(500).send('Failed to retrieve song');
         console.log('Failed to retrieve song');
