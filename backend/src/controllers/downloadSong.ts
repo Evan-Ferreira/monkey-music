@@ -1,11 +1,10 @@
 import { Downloader } from 'ytdl-mp3';
 
-export const downloadMP3 = async () => {
+const downloadMP3 = async (videoID: string) => {
     try {
-        const videoID = '_dK2tDK9grQ';
         const downloader = new Downloader({
             getTags: true,
-            outputDir: './src/controllers',
+            outputDir: './music',
         });
 
         await downloader.downloadSong(
@@ -15,3 +14,5 @@ export const downloadMP3 = async () => {
         console.error(error);
     }
 };
+
+export default downloadMP3;

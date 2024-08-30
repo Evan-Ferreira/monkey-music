@@ -37,7 +37,7 @@ const editAccessToken = async (
     console.log(`Updated ${variableName} in ${envPath}`);
 };
 
-export const getSpotifyToken = async () => {
+const getSpotifyToken = async () => {
     try {
         const response = await axios.post(
             'https://accounts.spotify.com/api/token',
@@ -62,3 +62,5 @@ export const getSpotifyToken = async () => {
         return null;
     }
 };
+
+export default getSpotifyToken;

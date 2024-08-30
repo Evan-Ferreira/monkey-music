@@ -5,8 +5,14 @@ dotenv.config();
 
 const YT_API_KEY = process.env.YT_API_KEY;
 
-const findSongLink = async (songName: String) => {
-    songName = songName + ' official audio';
+interface SongName {
+    trackName: string;
+    artistName: string;
+}
+
+const findSongLink = async (songName: SongName) => {
+    let newSongName =
+        songName.trackName + ' ' + songName.artistName + ' official audio';
     try {
         const response = await axios.get(
             'https://www.googleapis.com/youtube/v3/search',
@@ -15,7 +21,7 @@ const findSongLink = async (songName: String) => {
                     part: 'snippet',
                     type: 'video',
                     maxResults: 1,
-                    q: songName,
+                    q: newSongName,
                     key: YT_API_KEY,
                 },
             }

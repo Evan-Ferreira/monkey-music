@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { getSpotifyToken } from '../controllers/getToken';
+import getSpotifyToken from '../controllers/getToken';
 import { setupMiddlewares } from '../middleware/middleware';
 
 dotenv.config();
