@@ -1,4 +1,5 @@
 import { Text, View, Image, ScrollView, StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 
 export default function PlaylistScoll() {
     return (
@@ -7,12 +8,14 @@ export default function PlaylistScoll() {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
             >
-                <View>
-                    <Image
-                        style={styles.playlist}
-                        source={require('/Users/evanferreira/Documents/GitHub/monkey-music/frontend/assets/images/WealthSimple.png')}
-                    ></Image>
-                </View>
+                <Link href="/playlist">
+                    <View>
+                        <Image
+                            style={styles.playlist}
+                            source={require('/Users/evanferreira/Documents/GitHub/monkey-music/frontend/assets/images/WealthSimple.png')}
+                        ></Image>
+                    </View>
+                </Link>
                 <View>
                     <Image
                         style={styles.playlist}

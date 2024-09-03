@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Dimensions, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import TopHalf from '@/components/Home/TopHalf';
 import BottomHalf from '@/components/Home/BottomHalf';
 
@@ -8,7 +8,8 @@ export default function Home() {
             <Image
                 source={require('../../assets/images/blue_blob.png')}
                 style={styles.blueBlob}
-            ></Image>
+            />
+
             <Image
                 source={require('../../assets/images/red_blob.png')}
                 style={styles.redBlob}

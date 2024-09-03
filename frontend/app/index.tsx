@@ -1,10 +1,6 @@
 import { View } from 'react-native';
-import Home from './screens/Home';
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-    return (
-        <View>
-            <Home></Home>
-        </View>
-    );
+    return <Redirect href="/home"></Redirect>;
 }
