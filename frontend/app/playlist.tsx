@@ -1,8 +1,15 @@
 import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import Tophalf from '@/components/Playlist/TopHalf';
 import BottomHalf from '@/components/Playlist/BottomHalf';
+import { useContext } from 'react';
+import { songPlayingContext } from './_layout';
+import SongPeak from '../components/Song/SongPeak';
 
 const Playlist = () => {
+    const songContext = useContext(songPlayingContext);
+    if (!songContext) {
+        throw new Error('Context is not available');
+    }
     return (
         <View style={styles.background}>
             <Image
@@ -17,6 +24,7 @@ const Playlist = () => {
                 <Tophalf></Tophalf>
                 <BottomHalf></BottomHalf>
             </View>
+            {songContext.songContext !== 'null' ? <SongPeak></SongPeak> : null}
         </View>
     );
 };

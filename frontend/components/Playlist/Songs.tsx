@@ -17,17 +17,6 @@ const Songs = () => {
                 <Song></Song>
                 <Song></Song>
                 <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
-                <Song></Song>
             </ScrollView>
         </View>
     );
@@ -39,8 +28,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         width: '90%',
-        minHeight: '100%',
         borderRadius: 20,
         overflow: 'hidden',
+        paddingVertical: '2%',
     },
 });

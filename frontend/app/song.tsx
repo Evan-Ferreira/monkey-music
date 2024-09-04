@@ -1,9 +1,11 @@
 import { View, Text } from 'react-native';
 
-export default function Songs() {
+const song = () => {
     return (
         <View>
-            <Text>songs</Text>
+            <Text>song</Text>
         </View>
     );
-}
+};
+
+export default song;

@@ -1,17 +1,44 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { useState, useContext } from 'react';
+import { songPlayingContext } from '../../app/_layout';
 
 const Song = () => {
+    const [press, setPress] = useState(false);
+    const songContext = useContext(songPlayingContext);
+    if (!songContext) {
+        throw new Error('Context is not available');
+    }
     return (
-        <View style={styles.container}>
-            <Image
-                style={styles.image}
-                source={require('../../assets/images/RBC.png')}
-            ></Image>
-            <View style={styles.textContainer}>
-                <Text style={styles.title}>Flashing Lights</Text>
-                <Text style={styles.artist}>Kanye West</Text>
-            </View>
+        <View
+            style={[
+                styles.container,
+                press
+                    ? {
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      }
+                    : {
+                          backgroundColor: 'transparent',
+                      },
+            ]}
+        >
+            <Pressable
+                onPressIn={() => {
+                    setPress(true);
+                    songContext.setSongContext('song');
+                }}
+                onPressOut={() => setPress(false)}
+            >
+                <View style={styles.innerWrapper}>
+                    <Image
+                        style={styles.image}
+                        source={require('../../assets/images/RBC.png')}
+                    ></Image>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>Flashing Lights</Text>
+                        <Text style={styles.artist}>Kanye West</Text>
+                    </View>
+                </View>
+            </Pressable>
         </View>
     );
 };
@@ -20,11 +47,12 @@ export default Song;
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: '5%',
+        width: '100%',
+        paddingVertical: '1.5%',
+    },
+    innerWrapper: {
         flexDirection: 'row',
-        width: '90%',
         marginHorizontal: '10%',
-        marginBottom: '-2%',
     },
     image: {
         width: 50,
