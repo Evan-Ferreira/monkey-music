@@ -34,11 +34,19 @@ export default function RootLayout() {
     }
     return (
         <songPlayingContext.Provider value={{ songContext, setSongContext }}>
-            <Stack
-                screenOptions={{ headerShown: false }}
-                initialRouteName="home"
-            >
-                <Stack.Screen name="home" options={{ headerShown: false }} />
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen
+                    name="(tabs)/index"
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="(tabs)/playlist"
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="(tabs)/song"
+                    options={{ headerShown: false }}
+                />
             </Stack>
         </songPlayingContext.Provider>
     );

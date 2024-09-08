@@ -1,33 +1,33 @@
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
 
-const song = () => {
+const Song = () => {
     return (
         <View style={styles.background}>
             <Image
-                source={require('../assets/images/blue_blob.png')}
+                source={require('../../assets/images/blue_blob.png')}
                 style={styles.blueBlob}
             />
             <Image
-                source={require('../assets/images/red_blob.png')}
+                source={require('../../assets/images/red_blob.png')}
                 style={styles.redBlob}
             ></Image>
             <View style={styles.container}>
                 <View style={styles.backContainer}>
-                    <Link href="/playlist">
+                    <Link href="/(tabs)/playlist">
                         <Image
-                            source={require('../assets/images/back.png')}
+                            source={require('../../assets/images/back.png')}
                         ></Image>
                     </Link>
                 </View>
                 <Image
                     style={{ marginTop: '5%' }}
-                    source={require('../assets/images/shuffle.png')}
+                    source={require('../../assets/images/shuffle.png')}
                 ></Image>
                 <Text style={styles.playlistHeader}>Monkey Workout 🦍</Text>
                 <Image
                     style={styles.songArt}
-                    source={require('../assets/images/RBC.png')}
+                    source={require('../../assets/images/RBC.png')}
                 ></Image>
                 <View style={styles.description}>
                     <Text style={styles.song}>Flashing Lights</Text>
@@ -36,13 +36,13 @@ const song = () => {
                 <View style={styles.progress}></View>
                 <View style={styles.controls}>
                     <Image
-                        source={require('../assets/images/songBack.png')}
+                        source={require('../../assets/images/songBack.png')}
                     ></Image>
                     <Image
-                        source={require('../assets/images/songPlayRegular.png')}
+                        source={require('../../assets/images/songPlayRegular.png')}
                     ></Image>
                     <Image
-                        source={require('../assets/images/songSkip.png')}
+                        source={require('../../assets/images/songSkip.png')}
                     ></Image>
                 </View>
             </View>
@@ -50,7 +50,7 @@ const song = () => {
     );
 };
 
-export default song;
+export default Song;
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
@@ -87,12 +87,12 @@ const styles = StyleSheet.create({
     },
     songArt: {
         marginTop: '5%',
-        height: 350,
-        width: 350,
+        height: 300,
+        width: 300,
     },
     song: {
         color: '#EEE',
-        fontSize: 35,
+        fontSize: 30,
         fontFamily: 'Inter-Bold',
     },
     artist: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#CCC',
         height: 5,
         width: '80%',
-        marginTop: '10%',
+        marginTop: '15%',
     },
     controls: {
         flexDirection: 'row',

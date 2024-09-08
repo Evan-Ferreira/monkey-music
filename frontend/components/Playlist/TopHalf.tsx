@@ -6,7 +6,7 @@ const TopHalf = () => {
     return (
         <View style={styles.container}>
             <View style={styles.backContainer}>
-                <Link href="/home">
+                <Link href="/(tabs)">
                     <Image
                         source={require('../../assets/images/back.png')}
                     ></Image>

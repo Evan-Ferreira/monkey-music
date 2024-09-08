@@ -2,10 +2,10 @@ import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import Tophalf from '@/components/Playlist/TopHalf';
 import BottomHalf from '@/components/Playlist/BottomHalf';
 import { useContext } from 'react';
-import { songPlayingContext } from './_layout';
-import SongPeak from '../components/Song/SongPeak';
+import { songPlayingContext } from '../_layout';
+import SongPeak from '../../components/Song/SongPeak';
 
-const Playlist = () => {
+export default function Playlist() {
     const songContext = useContext(songPlayingContext);
     if (!songContext) {
         throw new Error('Context is not available');
@@ -13,11 +13,11 @@ const Playlist = () => {
     return (
         <View style={styles.background}>
             <Image
-                source={require('../assets/images/blue_blob.png')}
+                source={require('../../assets/images/blue_blob.png')}
                 style={styles.blueBlob}
             />
             <Image
-                source={require('../assets/images/red_blob.png')}
+                source={require('../../assets/images/red_blob.png')}
                 style={styles.redBlob}
             ></Image>
             <View style={styles.container}>
@@ -27,9 +27,7 @@ const Playlist = () => {
             {songContext.songContext !== 'null' ? <SongPeak></SongPeak> : null}
         </View>
     );
-};
-
-export default Playlist;
+}
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;

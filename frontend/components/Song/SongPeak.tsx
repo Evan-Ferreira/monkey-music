@@ -5,13 +5,15 @@ const SongPeak = () => {
     return (
         <View style={styles.container}>
             <Link href="/song">
-                <Image
-                    style={styles.image}
-                    source={require('../../assets/images/RBC.png')}
-                />
-                <View style={styles.textContainer}>
-                    <Text style={styles.title}>Flashing Lights</Text>
-                    <Text style={styles.artist}>Kanye West</Text>
+                <View style={styles.textImageContainer}>
+                    <Image
+                        style={styles.image}
+                        source={require('../../assets/images/RBC.png')}
+                    />
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>Flashing Lights</Text>
+                        <Text style={styles.artist}>Kanye West</Text>
+                    </View>
                 </View>
             </Link>
             <View style={styles.songControls}>
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         marginHorizontal: '5%',
-        height: '100%',
+        justifyContent: 'center',
     },
     songControls: {
         flexDirection: 'row',
@@ -63,5 +65,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '20%',
+    },
+    textImageContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });
