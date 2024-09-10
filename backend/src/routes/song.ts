@@ -1,5 +1,5 @@
 import express from 'express';
-import findSongYT from '../controllers/findSongYT';
+import findSongYT from '../../../MonkeyMusic/controllers/findSongYT';
 
 const router = express.Router();
 

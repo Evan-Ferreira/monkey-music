@@ -13,13 +13,13 @@ interface Props {
 export default function Playlist({ imageURL }: Props) {
     const songContext = useContext(songPlayingContext);
     const selectPlaylistName = useContext(playlistContext);
-
     if (!songContext) {
         throw new Error('Context is not available');
     }
     if (!selectPlaylistName) {
         throw new Error('Context is not available');
     }
+    const playlistSelected = selectPlaylistName.selectPlaylistName as string;
 
     return (
         <View style={styles.background}>
@@ -32,8 +32,11 @@ export default function Playlist({ imageURL }: Props) {
                 style={styles.redBlob}
             ></Image>
             <View style={styles.container}>
-                <Tophalf imageURL={imageURL}></Tophalf>
-                <BottomHalf></BottomHalf>
+                <Tophalf
+                    imageURL={imageURL}
+                    playlistSelected={playlistSelected}
+                ></Tophalf>
+                <BottomHalf playlistSelected={playlistSelected}></BottomHalf>
             </View>
             {songContext.songContext !== 'null' ? <SongPeak></SongPeak> : null}
         </View>

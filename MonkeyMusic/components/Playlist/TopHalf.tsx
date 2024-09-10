@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import PlaylistControls from './PlaylistControls';
 import { Link } from 'expo-router';
@@ -9,22 +10,48 @@ interface Props {
     playlistSelected: string;
 }
 
-const TopHalf = async ({ imageURL, playlistSelected }: Props) => {
-    const playlistInfo = qs.parse(await AsyncStorage.getItem(playlistSelected));
+const TopHalf = ({ imageURL, playlistSelected }: Props) => {
+    const [playlistName, setPlaylistName] = useState<string | null>(null);
+    const [playlistCoverArt, setPlaylistCoverArt] = useState<string | null>(
+        null
+    );
+    const [playlistTracks, setPlaylistTracks] = useState<any>(null);
+
+    const getPlaylistInfo = async () => {
+        try {
+            const storedValue = await AsyncStorage.getItem(playlistSelected);
+            if (storedValue) {
+                const playlistInfo = qs.parse(storedValue);
+                setPlaylistName(playlistInfo.playlistName as string);
+                setPlaylistCoverArt(playlistInfo.coverArt as string);
+                setPlaylistTracks(playlistInfo.tracks);
+            }
+        } catch (error) {
+            console.error('Failed to load playlist info:', error);
+        }
+    };
+
+    useEffect(() => {
+        getPlaylistInfo();
+    }, [playlistSelected]);
+
     return (
         <View style={styles.container}>
             <View style={styles.backContainer}>
                 <Link href="/(tabs)">
-                    <Image
-                        source={require('../../assets/images/back.png')}
-                    ></Image>
+                    <Image source={require('../../assets/images/back.png')} />
                 </Link>
             </View>
-            <Text style={styles.header}>MONKEY WORKOUT 🦍</Text>
-            <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{ uri: imageURL }} />
-            </View>
-            <PlaylistControls></PlaylistControls>
+            {playlistName && <Text style={styles.header}>{playlistName}</Text>}
+            {playlistCoverArt && (
+                <View style={styles.imageContainer}>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: playlistCoverArt }}
+                    />
+                </View>
+            )}
+            <PlaylistControls />
         </View>
     );
 };

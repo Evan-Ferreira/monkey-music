@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native';
 import Songs from '@/components/Playlist/Songs';
 
-const BottomHalf = () => {
+interface Props {
+    playlistSelected: string;
+}
+
+const BottomHalf = ({ playlistSelected }: Props) => {
     return (
         <View style={styles.container}>
             <Songs></Songs>

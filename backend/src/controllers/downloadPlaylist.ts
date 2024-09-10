@@ -1,5 +1,5 @@
 import downloadMP3 from './downloadSong';
-import findSongLink from './findSongYT';
+import findSongLink from '../../../MonkeyMusic/controllers/findSongYT';
 import getSpotifyToken from './getToken';
 import getPlaylistTracks from './getPlaylistSongs';
 

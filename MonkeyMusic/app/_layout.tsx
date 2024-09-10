@@ -11,8 +11,8 @@ interface songPlayingContextType {
 }
 
 interface transferPlaylistContextType {
-    playlistName: string;
-    setPlaylistName: (name: string) => void;
+    transferedPlaylist: string;
+    setTransferedPlaylist: (name: string) => void;
 }
 
 interface playlistContextType {
@@ -34,7 +34,8 @@ export const playlistContext = createContext<playlistContextType | undefined>(
 
 export default function RootLayout() {
     const [songContext, setSongContext] = useState('null');
-    const [playlistName, setPlaylistName] = useState('');
+    const [transferedPlaylist, setTransferedPlaylist] = useState('');
+    const [selectPlaylistName, setPlaylistName] = useState('');
     const [loaded, error] = useFonts({
         'Inter-Bold': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_28pt-Bold.ttf'),
         'Inter-SemiBold': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_18pt-SemiBold.ttf'),
@@ -52,27 +53,31 @@ export default function RootLayout() {
         return null;
     }
     return (
-        <transferPlaylistContext.Provider
-            value={{ playlistName, setPlaylistName }}
+        <playlistContext.Provider
+            value={{ selectPlaylistName, setPlaylistName }}
         >
-            <songPlayingContext.Provider
-                value={{ songContext, setSongContext }}
+            <transferPlaylistContext.Provider
+                value={{ transferedPlaylist, setTransferedPlaylist }}
             >
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="(tabs)/index"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="(tabs)/playlist"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="(tabs)/song"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            </songPlayingContext.Provider>
-        </transferPlaylistContext.Provider>
+                <songPlayingContext.Provider
+                    value={{ songContext, setSongContext }}
+                >
+                    <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen
+                            name="(tabs)/index"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="(tabs)/playlist"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="(tabs)/song"
+                            options={{ headerShown: false }}
+                        />
+                    </Stack>
+                </songPlayingContext.Provider>
+            </transferPlaylistContext.Provider>
+        </playlistContext.Provider>
     );
 }

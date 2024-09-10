@@ -1,11 +1,13 @@
 import express from 'express';
-import downloadPlaylist from '../controllers/downloadPlaylist';
+import getPlaylistTracks from '../controllers/getPlaylistSongs';
+import getToken from '../controllers/getToken';
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    downloadPlaylist(
-        'https://open.spotify.com/playlist/2MoXqUTKKC4E7G18sqMcqX?si=c6828c8b09444695'
+    getToken();
+    getPlaylistTracks(
+        'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M'
     );
 });
 

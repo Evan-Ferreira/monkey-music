@@ -8,34 +8,36 @@ import qs from 'qs';
 
 export default function PlaylistScroll() {
     const [playlists, setPlaylists] = useState([]);
-    const playlistName = useContext(transferPlaylistContext);
-    const [imageURL, setImageURL] = useState(null);
+    const transferPlaylist = useContext(transferPlaylistContext);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (playlistName.playlistName) {
-                setPlaylists((prevPlaylists) => [
-                    ...prevPlaylists,
-                    playlistName.playlistName,
-                ]);
+            if (transferPlaylist.transferedPlaylist) {
                 let playlistInfo = await AsyncStorage.getItem(
-                    playlistName.playlistName
+                    transferPlaylist.transferedPlaylist
                 );
 
                 if (playlistInfo) {
                     const parsedInfo = qs.parse(playlistInfo);
                     const response = await downloadCoverArt(
-                        playlistName.playlistName,
+                        transferPlaylist.transferedPlaylist,
                         parsedInfo.coverArt
                     );
 
                     if (response) {
-                        setImageURL(response);
                         parsedInfo.coverArt = response;
                         await AsyncStorage.setItem(
-                            playlistName.playlistName,
+                            transferPlaylist.transferedPlaylist,
                             qs.stringify(parsedInfo)
                         );
+
+                        setPlaylists((prevPlaylists) => [
+                            ...prevPlaylists,
+                            {
+                                name: transferPlaylist.transferedPlaylist,
+                                imageURL: response,
+                            },
+                        ]);
                     } else {
                         console.error('Failed to download cover art');
                     }
@@ -46,16 +48,19 @@ export default function PlaylistScroll() {
         };
 
         fetchData();
-    }, [playlistName]);
-
+    }, [transferPlaylist.transferedPlaylist]);
     return (
         <View style={styles.container}>
             <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
             >
-                {playlists.map((name, index) => (
-                    <Playlist key={index} imageURL={imageURL} />
+                {playlists.map((playlist, index) => (
+                    <Playlist
+                        key={index}
+                        name={playlist.name}
+                        imageURL={playlist.imageURL}
+                    />
                 ))}
             </ScrollView>
         </View>

@@ -42,12 +42,14 @@ export default function ButtonContainer({
             setPlaceholder('Failed to transfer playlist');
         } else {
             setPlaceholder('');
-            playlistName.setPlaylistName(String(playlistInfo.playlistName));
+            transferPlaylistName.setTransferedPlaylist(
+                String(playlistInfo.playlistName)
+            );
         }
         setInputText('');
     };
 
-    const playlistName = useContext(transferPlaylistContext);
+    const transferPlaylistName = useContext(transferPlaylistContext);
 
     return (
         <View style={styles.parentContainer}>
