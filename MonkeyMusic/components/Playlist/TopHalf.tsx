@@ -1,8 +1,16 @@
 import { View, Image, Text, StyleSheet } from 'react-native';
 import PlaylistControls from './PlaylistControls';
 import { Link } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import qs from 'qs';
 
-const TopHalf = () => {
+interface Props {
+    imageURL: string;
+    playlistSelected: string;
+}
+
+const TopHalf = async ({ imageURL, playlistSelected }: Props) => {
+    const playlistInfo = qs.parse(await AsyncStorage.getItem(playlistSelected));
     return (
         <View style={styles.container}>
             <View style={styles.backContainer}>
@@ -14,10 +22,7 @@ const TopHalf = () => {
             </View>
             <Text style={styles.header}>MONKEY WORKOUT 🦍</Text>
             <View style={styles.imageContainer}>
-                <Image
-                    style={styles.image}
-                    source={require('../../assets/images/WealthSimple.png')}
-                />
+                <Image style={styles.image} source={{ uri: imageURL }} />
             </View>
             <PlaylistControls></PlaylistControls>
         </View>

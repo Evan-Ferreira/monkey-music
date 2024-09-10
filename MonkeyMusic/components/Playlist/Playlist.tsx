@@ -1,19 +1,17 @@
 import { View, StyleSheet, Image } from 'react-native';
 import { Link } from 'expo-router';
-import RNFS from 'react-native-fs';
 
 interface Props {
-    playlistName: string;
+    imageURL: string;
 }
 
-export default function Playlist({ playlistName }: Props) {
-    const coverArtPath = `file://${RNFS.DocumentDirectoryPath}/${playlistName}`;
+export default function Playlist({ imageURL }: Props) {
     return (
         <Link href="/playlist">
             <View>
                 <Image
                     style={styles.playlist}
-                    source={{ uri: coverArtPath }}
+                    source={{ uri: imageURL }}
                 ></Image>
             </View>
         </Link>

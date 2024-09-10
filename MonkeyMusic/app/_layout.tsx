@@ -15,6 +15,11 @@ interface transferPlaylistContextType {
     setPlaylistName: (name: string) => void;
 }
 
+interface playlistContextType {
+    selectPlaylistName: string;
+    setPlaylistName: (name: string) => void;
+}
+
 export const songPlayingContext = createContext<
     songPlayingContextType | undefined
 >(undefined);
@@ -22,6 +27,10 @@ export const songPlayingContext = createContext<
 export const transferPlaylistContext = createContext<
     transferPlaylistContextType | undefined
 >(undefined);
+
+export const playlistContext = createContext<playlistContextType | undefined>(
+    undefined
+);
 
 export default function RootLayout() {
     const [songContext, setSongContext] = useState('null');

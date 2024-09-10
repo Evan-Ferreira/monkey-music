@@ -4,12 +4,23 @@ import BottomHalf from '@/components/Playlist/BottomHalf';
 import { useContext } from 'react';
 import { songPlayingContext } from '../_layout';
 import SongPeak from '../../components/Song/SongPeak';
+import { playlistContext } from '../_layout';
 
-export default function Playlist() {
+interface Props {
+    imageURL: string;
+}
+
+export default function Playlist({ imageURL }: Props) {
     const songContext = useContext(songPlayingContext);
+    const selectPlaylistName = useContext(playlistContext);
+
     if (!songContext) {
         throw new Error('Context is not available');
     }
+    if (!selectPlaylistName) {
+        throw new Error('Context is not available');
+    }
+
     return (
         <View style={styles.background}>
             <Image
@@ -21,7 +32,7 @@ export default function Playlist() {
                 style={styles.redBlob}
             ></Image>
             <View style={styles.container}>
-                <Tophalf></Tophalf>
+                <Tophalf imageURL={imageURL}></Tophalf>
                 <BottomHalf></BottomHalf>
             </View>
             {songContext.songContext !== 'null' ? <SongPeak></SongPeak> : null}

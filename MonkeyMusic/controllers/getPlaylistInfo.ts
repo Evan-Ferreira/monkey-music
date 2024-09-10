@@ -22,8 +22,6 @@ export default async function getPlaylistInfo(playlistURL: string) {
             album: item.track.album.name,
             duration_ms: item.track.duration_ms,
         }));
-        console.log(playlistName);
-        console.log(coverArt);
         return {
             playlistName: playlistName,
             coverArt: coverArt,
