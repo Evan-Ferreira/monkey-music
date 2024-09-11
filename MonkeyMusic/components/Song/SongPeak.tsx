@@ -1,18 +1,34 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Link } from 'expo-router';
+import { useContext, useEffect, useState } from 'react';
+import { songPlayingContext } from '../../app/_layout';
+import qs from 'qs';
 
 const SongPeak = () => {
+    const songContext = useContext(songPlayingContext);
+    if (!songContext) {
+        throw new Error('Context is not available');
+    }
+    const [trackName, setTrackName] = useState('');
+    const [artist, setArtist] = useState('');
+
+    useEffect(() => {
+        const trackInfo = qs.parse(songContext.songContext);
+        setTrackName((trackInfo.trackName as string) || '');
+        setArtist((trackInfo.artist as string) || '');
+    }, [songContext.songContext]);
+
     return (
         <View style={styles.container}>
             <Link href="/song">
                 <View style={styles.textImageContainer}>
                     <Image
                         style={styles.image}
-                        source={require('../../assets/images/RBC.png')}
+                        source={require('../../assets/images/monke.jpg')}
                     />
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>Flashing Lights</Text>
-                        <Text style={styles.artist}>Kanye West</Text>
+                        <Text style={styles.title}>{trackName}</Text>
+                        <Text style={styles.artist}>{artist}</Text>
                     </View>
                 </View>
             </Link>

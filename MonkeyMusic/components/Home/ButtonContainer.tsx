@@ -9,6 +9,7 @@ import {
 import { useRef, useEffect, useState, useContext } from 'react';
 import transferPlaylist from '../../actions/transferPlaylist';
 import { transferPlaylistContext } from '../../app/_layout';
+import downloadSong from '../../controllers/downloadSong';
 
 interface Props {
     setTransfer: (value: boolean) => void;

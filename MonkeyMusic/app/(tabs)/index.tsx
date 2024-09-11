@@ -24,7 +24,7 @@ export default function Home() {
                 <TopHalf></TopHalf>
                 <BottomHalf></BottomHalf>
             </View>
-            {songContext.songContext !== 'null' ? <SongPeak></SongPeak> : null}
+            {songContext.songContext !== null ? <SongPeak></SongPeak> : null}
         </View>
     );
 }

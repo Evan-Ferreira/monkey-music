@@ -1,13 +1,38 @@
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { songPlayingContext } from '../../app/_layout';
+import {
+    initializeSound,
+    loadTrack,
+    playTrack,
+    pauseTrack,
+    unloadTrack,
+    setPlaybackStatusListener,
+} from '@/actions/audioControls';
+import { playlistContext } from '../../app/_layout';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import qs from 'qs';
 
-const Song = () => {
+interface Props {
+    trackName: string;
+    artist: string;
+    uri: string;
+}
+
+const Song = ({ trackName, artist, uri }: Props) => {
     const [press, setPress] = useState(false);
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const songContext = useContext(songPlayingContext);
-    if (!songContext) {
+    const playlistName = useContext(playlistContext);
+    const songInfo = { trackName, artist, uri };
+    if (!songContext || !playlistName) {
         throw new Error('Context is not available');
     }
+    const handleClick = () => {
+        setPress(true);
+        songContext.setSongContext(qs.stringify(songInfo));
+    };
+
     return (
         <View
             style={[
@@ -22,20 +47,17 @@ const Song = () => {
             ]}
         >
             <Pressable
-                onPressIn={() => {
-                    setPress(true);
-                    songContext.setSongContext('song');
-                }}
+                onPressIn={handleClick}
                 onPressOut={() => setPress(false)}
             >
                 <View style={styles.innerWrapper}>
                     <Image
                         style={styles.image}
-                        source={require('../../assets/images/RBC.png')}
+                        source={require('../../assets/images/monke.jpg')}
                     ></Image>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>Flashing Lights</Text>
-                        <Text style={styles.artist}>Kanye West</Text>
+                        <Text style={styles.title}>{trackName}</Text>
+                        <Text style={styles.artist}>{artist}</Text>
                     </View>
                 </View>
             </Pressable>

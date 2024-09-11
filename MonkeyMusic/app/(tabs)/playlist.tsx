@@ -38,7 +38,7 @@ export default function Playlist({ imageURL }: Props) {
                 ></Tophalf>
                 <BottomHalf playlistSelected={playlistSelected}></BottomHalf>
             </View>
-            {songContext.songContext !== 'null' ? <SongPeak></SongPeak> : null}
+            {songContext.songContext !== null ? <SongPeak></SongPeak> : null}
         </View>
     );
 }

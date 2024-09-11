@@ -21,6 +21,7 @@ export default async function getPlaylistInfo(playlistURL: string) {
             artist: item.track.artists.map((artist) => artist.name).join(', '),
             album: item.track.album.name,
             duration_ms: item.track.duration_ms,
+            uri: null,
         }));
         return {
             playlistName: playlistName,

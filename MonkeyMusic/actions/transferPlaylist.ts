@@ -3,6 +3,7 @@ import getPlaylistInfo from '../controllers/getPlaylistInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import qs from 'qs';
 import downloadCoverArt from '../controllers/downloadCoverArt';
+import downloadPlaylist from './downloadPlaylist';
 
 const storePlaylistInfo = async (response: any) => {
     try {
@@ -23,6 +24,7 @@ export default async function transferPlaylist(playlistURL: string) {
     } else {
         await storePlaylistInfo(response);
         await downloadCoverArt(response.playlistName, response.coverArt);
+        await downloadPlaylist(response.playlistName);
         const playlistInfo = await AsyncStorage.getItem(response.playlistName);
         return qs.parse(playlistInfo);
     }

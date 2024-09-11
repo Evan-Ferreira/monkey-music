@@ -8,7 +8,7 @@ interface Props {
 const BottomHalf = ({ playlistSelected }: Props) => {
     return (
         <View style={styles.container}>
-            <Songs></Songs>
+            <Songs playlistName={playlistSelected}></Songs>
         </View>
     );
 };

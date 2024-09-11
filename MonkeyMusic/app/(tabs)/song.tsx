@@ -1,7 +1,25 @@
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
+import { useContext, useEffect, useState } from 'react';
+import { songPlayingContext } from '../../app/_layout';
+import qs from 'qs';
+import { playlistContext } from '../../app/_layout';
 
 const Song = () => {
+    const songContext = useContext(songPlayingContext);
+    const playlistName = useContext(playlistContext);
+    if (!songContext || !playlistName) {
+        throw new Error('Context is not available');
+    }
+    const [trackName, setTrackName] = useState('');
+    const [artist, setArtist] = useState('');
+    const [playlist, setPlaylist] = useState('');
+    useEffect(() => {
+        const trackInfo = qs.parse(songContext.songContext);
+        setTrackName((trackInfo.trackName as string) || '');
+        setArtist((trackInfo.artist as string) || '');
+        setPlaylist((playlistName.selectPlaylistName as string) || '');
+    }, [songContext.songContext]);
     return (
         <View style={styles.background}>
             <Image
@@ -24,14 +42,14 @@ const Song = () => {
                     style={{ marginTop: '5%' }}
                     source={require('../../assets/images/shuffle.png')}
                 ></Image>
-                <Text style={styles.playlistHeader}>Monkey Workout 🦍</Text>
+                <Text style={styles.playlistHeader}>{playlist}</Text>
                 <Image
                     style={styles.songArt}
-                    source={require('../../assets/images/RBC.png')}
+                    source={require('../../assets/images/monke.jpg')}
                 ></Image>
                 <View style={styles.description}>
-                    <Text style={styles.song}>Flashing Lights</Text>
-                    <Text style={styles.artist}>Kanye West</Text>
+                    <Text style={styles.song}>{trackName}</Text>
+                    <Text style={styles.artist}>{artist}</Text>
                 </View>
                 <View style={styles.progress}></View>
                 <View style={styles.controls}>

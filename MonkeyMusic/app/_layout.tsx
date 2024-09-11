@@ -7,7 +7,7 @@ SplashScreen.preventAutoHideAsync();
 
 interface songPlayingContextType {
     songContext: string;
-    setSongContext: (page: string) => void;
+    setSongContext: (name: string) => void;
 }
 
 interface transferPlaylistContextType {
@@ -33,7 +33,7 @@ export const playlistContext = createContext<playlistContextType | undefined>(
 );
 
 export default function RootLayout() {
-    const [songContext, setSongContext] = useState('null');
+    const [songContext, setSongContext] = useState(null);
     const [transferedPlaylist, setTransferedPlaylist] = useState('');
     const [selectPlaylistName, setPlaylistName] = useState('');
     const [loaded, error] = useFonts({
@@ -52,6 +52,8 @@ export default function RootLayout() {
     if (!loaded && !error) {
         return null;
     }
+
+    useEffect(() => {}, []);
     return (
         <playlistContext.Provider
             value={{ selectPlaylistName, setPlaylistName }}
