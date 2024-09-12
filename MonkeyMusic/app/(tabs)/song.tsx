@@ -1,4 +1,11 @@
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    Dimensions,
+    Pressable,
+} from 'react-native';
 import { Link } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
 import { songPlayingContext } from '../../app/_layout';
@@ -20,6 +27,22 @@ const Song = () => {
         setArtist((trackInfo.artist as string) || '');
         setPlaylist((playlistName.selectPlaylistName as string) || '');
     }, [songContext.songContext]);
+
+    const handlePlay = () => {
+        if (songContext.songAction === 'play') {
+            songContext.setSongAction('pause');
+        } else {
+            songContext.setSongAction('play');
+        }
+    };
+
+    const handleSkip = () => {
+        songContext.setSongAction('skip');
+    };
+
+    const handlePrevious = () => {
+        songContext.setSongAction('back');
+    };
     return (
         <View style={styles.background}>
             <Image
@@ -53,15 +76,25 @@ const Song = () => {
                 </View>
                 <View style={styles.progress}></View>
                 <View style={styles.controls}>
-                    <Image
-                        source={require('../../assets/images/songBack.png')}
-                    ></Image>
-                    <Image
-                        source={require('../../assets/images/songPlayRegular.png')}
-                    ></Image>
-                    <Image
-                        source={require('../../assets/images/songSkip.png')}
-                    ></Image>
+                    <Pressable onPress={handlePrevious}>
+                        <Image
+                            source={require('../../assets/images/songBack.png')}
+                        ></Image>
+                    </Pressable>
+                    <Pressable onPress={handlePlay}>
+                        <Image
+                            source={
+                                songContext.songAction === 'play'
+                                    ? require('../../assets/images/bigPause.png')
+                                    : require('../../assets/images/songPlayRegular.png')
+                            }
+                        ></Image>
+                    </Pressable>
+                    <Pressable onPress={handleSkip}>
+                        <Image
+                            source={require('../../assets/images/songSkip.png')}
+                        ></Image>
+                    </Pressable>
                 </View>
             </View>
         </View>

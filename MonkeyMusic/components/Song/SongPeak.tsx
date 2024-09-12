@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
 import { songPlayingContext } from '../../app/_layout';
@@ -18,6 +18,13 @@ const SongPeak = () => {
         setArtist((trackInfo.artist as string) || '');
     }, [songContext.songContext]);
 
+    const handlePlay = () => {
+        if (songContext.songAction === 'play') {
+            songContext.setSongAction('pause');
+        } else {
+            songContext.setSongAction('play');
+        }
+    };
     return (
         <View style={styles.container}>
             <Link href="/song">
@@ -34,10 +41,16 @@ const SongPeak = () => {
             </Link>
             <View style={styles.songControls}>
                 <Image source={require('../../assets/images/wavePlay.png')} />
-                <Image
-                    style={{ paddingLeft: '10%' }}
-                    source={require('../../assets/images/smallPlay.png')}
-                />
+                <Pressable onPress={handlePlay}>
+                    <Image
+                        style={{ paddingLeft: '10%' }}
+                        source={
+                            songContext.songAction === 'play'
+                                ? require('../../assets/images/smallPause.png')
+                                : require('../../assets/images/smallPlay.png')
+                        }
+                    />
+                </Pressable>
             </View>
         </View>
     );

@@ -1,41 +1,51 @@
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, createContext, useState } from 'react';
+import { useEffect, createContext, useState, useRef } from 'react';
+import { Audio } from 'expo-av';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import qs from 'qs';
 
 SplashScreen.preventAutoHideAsync();
 
-interface songPlayingContextType {
+interface SongPlayingContextType {
     songContext: string;
     setSongContext: (name: string) => void;
+    songAction: string;
+    setSongAction: (action: 'play' | 'pause' | 'skip' | 'back') => void;
 }
 
-interface transferPlaylistContextType {
+interface TransferPlaylistContextType {
     transferedPlaylist: string;
     setTransferedPlaylist: (name: string) => void;
 }
 
-interface playlistContextType {
+interface PlaylistContextType {
     selectPlaylistName: string;
     setPlaylistName: (name: string) => void;
 }
 
 export const songPlayingContext = createContext<
-    songPlayingContextType | undefined
+    SongPlayingContextType | undefined
 >(undefined);
-
 export const transferPlaylistContext = createContext<
-    transferPlaylistContextType | undefined
+    TransferPlaylistContextType | undefined
 >(undefined);
-
-export const playlistContext = createContext<playlistContextType | undefined>(
+export const playlistContext = createContext<PlaylistContextType | undefined>(
     undefined
 );
 
 export default function RootLayout() {
-    const [songContext, setSongContext] = useState(null);
-    const [transferedPlaylist, setTransferedPlaylist] = useState('');
-    const [selectPlaylistName, setPlaylistName] = useState('');
+    const [songContext, setSongContext] = useState<string | null>(null);
+    const [transferedPlaylist, setTransferedPlaylist] = useState<string>('');
+    const [selectPlaylistName, setPlaylistName] = useState<string>('');
+    const [songAction, setSongAction] = useState<
+        'play' | 'pause' | 'skip' | 'back'
+    >('pause');
+    const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
+    const [playlist, setPlaylist] = useState<string[]>([]);
+    const sound = useRef<Audio.Sound | null>(null);
+
     const [loaded, error] = useFonts({
         'Inter-Bold': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_28pt-Bold.ttf'),
         'Inter-SemiBold': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_18pt-SemiBold.ttf'),
@@ -49,11 +59,101 @@ export default function RootLayout() {
         }
     }, [loaded, error]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await AsyncStorage.getItem(selectPlaylistName);
+            if (data) {
+                const playlistInfo = qs.parse(data);
+                const playlistSongs = playlistInfo.allTracks as string[];
+                setPlaylist(playlistSongs);
+            }
+        };
+        fetchData();
+    }, [selectPlaylistName]);
+
+    useEffect(() => {
+        if (playlist.length > 0 && songContext === null) {
+            setSongContext(playlist[currentSongIndex]);
+        }
+    }, [playlist]);
+
+    useEffect(() => {
+        const initializeSound = async () => {
+            sound.current = new Audio.Sound();
+            sound.current.setOnPlaybackStatusUpdate((status: any) => {
+                if (status.didJustFinish) {
+                    handleSkipSong();
+                }
+            });
+        };
+        initializeSound();
+        return () => {
+            if (sound.current) {
+                sound.current.unloadAsync();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (songContext) {
+            handlePlaySong();
+        }
+    }, [songContext]);
+
+    const handlePlaySong = async () => {
+        if (!songContext || !sound.current) return;
+
+        const songURI = qs.parse(songContext).uri as string;
+
+        try {
+            await sound.current.unloadAsync();
+            await sound.current.loadAsync({ uri: songURI });
+        } catch (error) {
+            console.error('Error loading or playing track:', error);
+        }
+    };
+
+    const handleSkipSong = () => {
+        if (currentSongIndex < playlist.length - 1) {
+            setCurrentSongIndex((prevIndex) => prevIndex + 1);
+            setSongContext(playlist[currentSongIndex + 1]);
+        } else {
+            setCurrentSongIndex(0);
+            setSongContext(playlist[0]);
+        }
+        setSongAction('play');
+    };
+
+    const handlePreviousSong = () => {
+        if (currentSongIndex > 0) {
+            setCurrentSongIndex((prevIndex) => prevIndex - 1);
+            setSongContext(playlist[currentSongIndex - 1]);
+            setSongAction('play');
+        }
+    };
+
+    const handleSongActionChange = (
+        action: 'play' | 'pause' | 'skip' | 'back'
+    ) => {
+        if (action === 'skip') {
+            handleSkipSong();
+        } else if (action === 'pause') {
+            sound.current?.pauseAsync();
+        } else if (action === 'back') {
+            handlePreviousSong();
+        } else {
+            handlePlaySong();
+        }
+    };
+
+    useEffect(() => {
+        handleSongActionChange(songAction);
+    }, [songAction]);
+
     if (!loaded && !error) {
         return null;
     }
 
-    useEffect(() => {}, []);
     return (
         <playlistContext.Provider
             value={{ selectPlaylistName, setPlaylistName }}
@@ -62,7 +162,12 @@ export default function RootLayout() {
                 value={{ transferedPlaylist, setTransferedPlaylist }}
             >
                 <songPlayingContext.Provider
-                    value={{ songContext, setSongContext }}
+                    value={{
+                        songContext,
+                        setSongContext,
+                        songAction,
+                        setSongAction: handleSongActionChange,
+                    }}
                 >
                     <Stack screenOptions={{ headerShown: false }}>
                         <Stack.Screen

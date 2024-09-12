@@ -1,16 +1,7 @@
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { useState, useContext, useEffect } from 'react';
 import { songPlayingContext } from '../../app/_layout';
-import {
-    initializeSound,
-    loadTrack,
-    playTrack,
-    pauseTrack,
-    unloadTrack,
-    setPlaybackStatusListener,
-} from '@/actions/audioControls';
 import { playlistContext } from '../../app/_layout';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import qs from 'qs';
 
 interface Props {
@@ -21,7 +12,6 @@ interface Props {
 
 const Song = ({ trackName, artist, uri }: Props) => {
     const [press, setPress] = useState(false);
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const songContext = useContext(songPlayingContext);
     const playlistName = useContext(playlistContext);
     const songInfo = { trackName, artist, uri };
@@ -31,6 +21,11 @@ const Song = ({ trackName, artist, uri }: Props) => {
     const handleClick = () => {
         setPress(true);
         songContext.setSongContext(qs.stringify(songInfo));
+        if (songContext.songAction === 'play') {
+            songContext.setSongAction('pause');
+        } else {
+            songContext.setSongAction('play');
+        }
     };
 
     return (

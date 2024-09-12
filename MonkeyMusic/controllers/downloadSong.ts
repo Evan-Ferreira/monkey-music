@@ -6,44 +6,33 @@ const RAPID_API_KEY = process.env.EXPO_PUBLIC_RAPID_API_KEY;
 
 const downloadMP3 = async (songName: string, videoID: string) => {
     const URL = await getDownloadLink(videoID);
-    const videoName = noSpace(songName as string);
-    const fileURI = `${FileSystem.documentDirectory}${videoName}.mp3`;
-    const downloadResumable = FileSystem.createDownloadResumable(
+    const videoName = noSpace(songName as string) + '.mp3';
+    const response = await FileSystem.downloadAsync(
         URL,
-        fileURI,
-        {},
-        (downloadProgress) => {
-            console.log('Download progress: ', downloadProgress);
-        }
+        FileSystem.documentDirectory + videoName
     );
-
-    try {
-        const { uri } = await downloadResumable.downloadAsync();
-        console.log('Download completed: ', uri);
-        return uri;
-    } catch (error) {
-        console.error('Download error: ', error);
-        return null;
-    }
+    return response.uri;
 };
 
 const getDownloadLink = async (videoID: string) => {
+    const options = {
+        method: 'GET',
+        url: 'https://youtube-mp36.p.rapidapi.com/dl',
+        params: { id: 'ic8j13piAhQ' },
+        headers: {
+            'x-rapidapi-key': RAPID_API_KEY,
+            'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com',
+        },
+    };
+
     try {
-        const response = await axios.get(
-            'https://youtube-mp3-download1.p.rapidapi.com/dl',
-            {
-                params: { id: videoID },
-                headers: {
-                    'x-rapidapi-host': 'youtube-mp3-download1.p.rapidapi.com',
-                    'x-rapidapi-key': RAPID_API_KEY,
-                },
-            }
-        );
+        const response = await axios.request(options);
+        return 'https://mbeta.123tokyo.xyz/get.php/0/57/ic8j13piAhQ.mp3?cid=MmEwMTo0Zjg6YzAxMDo5ZmE2OjoxfE5BfERF&h=zzNTMB4LDdOQpkc-qMdUEw&s=1726114800&n=Taylor%20Swift%20-%20Cruel%20Summer%20%28Official%20Audio%29';
         return response.data.link;
-        return 'https://mp3api.ytjar.info/mp3.php?id=NBtPMSLeLl59rA80SehdFNjh9AuXscMaCttfVmZW3Z07qdJikujPCyHCSAF%2BGw%3D%3D&return=0';
     } catch (error) {
         console.error(error);
     }
+    // https://mbeta.123tokyo.xyz/get.php/0/57/ic8j13piAhQ.mp3?cid=MmEwMTo0Zjg6YzAxMDo5ZmE2OjoxfE5BfERF&h=zzNTMB4LDdOQpkc-qMdUEw&s=1726114800&n=Taylor%20Swift%20-%20Cruel%20Summer%20%28Official%20Audio%29
 };
 
 export default downloadMP3;
