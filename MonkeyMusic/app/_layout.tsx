@@ -44,30 +44,15 @@ export default function RootLayout() {
     >('pause');
     const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
     const [playlist, setPlaylist] = useState<string[]>([]);
-    const sound = useRef<Audio.Sound | null>(null);
-
+    const sound = useRef(new Audio.Sound());
     const [loaded, error] = useFonts({
         'Inter-Bold': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_28pt-Bold.ttf'),
         'Inter-SemiBold': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_18pt-SemiBold.ttf'),
         'Inter-Regular': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_24pt-Regular.ttf'),
         'Inter-Light': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_18pt-Light.ttf'),
     });
-
-    useEffect(() => {
-        const configureAudio = async () => {
-            await Audio.setAudioModeAsync({
-                allowsRecordingIOS: false,
-                staysActiveInBackground: true,
-                interruptionModeIOS: InterruptionModeIOS.DuckOthers,
-                playsInSilentModeIOS: true,
-                shouldDuckAndroid: true,
-                interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
-                playThroughEarpieceAndroid: false,
-            });
-        };
-
-        configureAudio();
-    }, []);
+    const [currentSongURI, setCurrentSongURI] = useState<string | null>(null);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
     useEffect(() => {
         if (loaded || error) {
@@ -82,57 +67,38 @@ export default function RootLayout() {
                 const playlistInfo = qs.parse(data);
                 const playlistSongs = playlistInfo.allTracks as string[];
                 setPlaylist(playlistSongs);
+                console.log(playlistSongs);
             }
         };
         fetchData();
     }, [selectPlaylistName]);
 
-    useEffect(() => {
-        if (playlist.length > 0 && songContext === null) {
-            setSongContext(playlist[currentSongIndex]);
-        }
-    }, [playlist]);
-
-    useEffect(() => {
-        const initializeSound = async () => {
-            sound.current = new Audio.Sound();
-            sound.current.setOnPlaybackStatusUpdate((status: any) => {
-                if (status.didJustFinish) {
-                    handleSkipSong();
-                }
-            });
-        };
-        initializeSound();
-        return () => {
-            if (sound.current) {
-                sound.current.unloadAsync();
-            }
-        };
-    }, []);
-
-    useEffect(() => {
-        if (songContext) {
-            handlePlaySong();
-        }
-    }, [songContext]);
-
     const handlePlaySong = async () => {
-        if (!songContext || !sound.current) return;
-
-        const songURI = qs.parse(songContext).uri as string;
-
+        if (!songContext) return;
+        const songURI = qs.parse(playlist[currentSongIndex]).uri as string;
         try {
             await sound.current.unloadAsync();
             await sound.current.loadAsync({ uri: songURI });
+            await sound.current.playAsync();
+            setCurrentSongURI(songURI);
+            setIsPlaying(true);
         } catch (error) {
             console.error('Error loading or playing track:', error);
         }
     };
 
+    const handlePauseSong = async () => {
+        if (isPlaying) {
+            await sound.current.pauseAsync();
+            setIsPlaying(false);
+        }
+    };
+
     const handleSkipSong = () => {
         if (currentSongIndex < playlist.length - 1) {
-            setCurrentSongIndex((prevIndex) => prevIndex + 1);
-            setSongContext(playlist[currentSongIndex + 1]);
+            const newIndex = currentSongIndex + 1;
+            setCurrentSongIndex(newIndex);
+            setSongContext(playlist[newIndex]);
         } else {
             setCurrentSongIndex(0);
             setSongContext(playlist[0]);
@@ -142,28 +108,26 @@ export default function RootLayout() {
 
     const handlePreviousSong = () => {
         if (currentSongIndex > 0) {
-            setCurrentSongIndex((prevIndex) => prevIndex - 1);
-            setSongContext(playlist[currentSongIndex - 1]);
-            setSongAction('play');
-        }
-    };
-
-    const handleSongActionChange = (
-        action: 'play' | 'pause' | 'skip' | 'back'
-    ) => {
-        if (action === 'skip') {
-            handleSkipSong();
-        } else if (action === 'pause') {
-            sound.current?.pauseAsync();
-        } else if (action === 'back') {
-            handlePreviousSong();
+            const newIndex = currentSongIndex - 1;
+            setCurrentSongIndex(newIndex);
+            setSongContext(playlist[newIndex]);
         } else {
-            handlePlaySong();
+            setCurrentSongIndex(playlist.length - 1);
+            setSongContext(playlist[playlist.length - 1]);
         }
+        setSongAction('play');
     };
 
     useEffect(() => {
-        handleSongActionChange(songAction);
+        if (songAction === 'play') {
+            handlePlaySong();
+        } else if (songAction === 'pause') {
+            handlePauseSong();
+        } else if (songAction === 'skip') {
+            handleSkipSong();
+        } else if (songAction === 'back') {
+            handlePreviousSong();
+        }
     }, [songAction]);
 
     if (!loaded && !error) {
@@ -182,7 +146,7 @@ export default function RootLayout() {
                         songContext,
                         setSongContext,
                         songAction,
-                        setSongAction: handleSongActionChange,
+                        setSongAction,
                     }}
                 >
                     <Stack screenOptions={{ headerShown: false }}>

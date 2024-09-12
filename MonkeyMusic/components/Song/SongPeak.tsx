@@ -14,7 +14,7 @@ const SongPeak = () => {
 
     useEffect(() => {
         const trackInfo = qs.parse(songContext.songContext);
-        setTrackName((trackInfo.trackName as string) || '');
+        setTrackName((trackInfo.name as string) || '');
         setArtist((trackInfo.artist as string) || '');
     }, [songContext.songContext]);
 

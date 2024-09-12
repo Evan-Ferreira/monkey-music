@@ -23,7 +23,7 @@ const Song = () => {
     const [playlist, setPlaylist] = useState('');
     useEffect(() => {
         const trackInfo = qs.parse(songContext.songContext);
-        setTrackName((trackInfo.trackName as string) || '');
+        setTrackName((trackInfo.name as string) || '');
         setArtist((trackInfo.artist as string) || '');
         setPlaylist((playlistName.selectPlaylistName as string) || '');
     }, [songContext.songContext]);
