@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, createContext, useState, useRef } from 'react';
-import { Audio } from 'expo-av';
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import qs from 'qs';
 
@@ -52,6 +52,22 @@ export default function RootLayout() {
         'Inter-Regular': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_24pt-Regular.ttf'),
         'Inter-Light': require('/Users/evanferreira/Documents/GitHub/monkey-music/MonkeyMusic/assets/fonts/Inter/Inter_18pt-Light.ttf'),
     });
+
+    useEffect(() => {
+        const configureAudio = async () => {
+            await Audio.setAudioModeAsync({
+                allowsRecordingIOS: false,
+                staysActiveInBackground: true,
+                interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+                playsInSilentModeIOS: true,
+                shouldDuckAndroid: true,
+                interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+                playThroughEarpieceAndroid: false,
+            });
+        };
+
+        configureAudio();
+    }, []);
 
     useEffect(() => {
         if (loaded || error) {
